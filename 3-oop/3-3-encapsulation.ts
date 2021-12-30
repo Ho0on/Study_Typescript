@@ -11,7 +11,7 @@
 		private static BEANS_GRAMM_PER_SHOT: number = 7; // class level
 		private coffeeBeans: number = 0; // instance (object) level
 
-		constructor(coffeeBeans: number) {
+		private constructor(coffeeBeans: number) {
 			this.coffeeBeans = coffeeBeans;
 		}
 
@@ -19,7 +19,12 @@
 			return new CoffeeMaker(coffeeBeans);
 		}
 
-		fillCoffeeBeans(beans: number);
+		public fillCoffeeBeans(beans: number) {
+			if (beans < 0) {
+				throw new Error('value for beans should be greater than 0');
+			}
+			this.coffeeBeans += beans;
+		}
 
 		makeCoffee(shots: number): CoffeeCup {
 			if (this.coffeeBeans < shots * CoffeeMaker.BEANS_GRAMM_PER_SHOT) {
@@ -33,7 +38,27 @@
 		}
 	}
 
-	const maker = new CoffeeMaker(32);
-	maker.coffeeBeans = 3;
-	maker.coffeeBeans = -34; // invalid
+	const maker = CoffeeMaker.makeMachine(32);
+	maker.fillCoffeeBeans(32);
+
+	class User {
+		get fullName(): string {
+			return `${this.firstName} ${this.lastName}`;
+		}
+		private internalAge = 4;
+		get age(): number {
+			return this.internalAge;
+		}
+		set age(num: number) {
+			this.internalAge = num;
+		}
+		constructor(private firstName: string, private lastName: string) {
+			this.firstName = firstName;
+			this.lastName = lastName;
+		}
+	}
+
+	const user = new User('Steve', 'Jobs');
+	console.log(user.fullName);
+	user.age = 6;
 }
